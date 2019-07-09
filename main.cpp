@@ -1,7 +1,10 @@
 #include <unistd.h>
 #include <ncurses.h>
 
-using namespace std;
+#include <chrono>
+#include <iostream>
+
+using namespace std::chrono;
 
 int main() {
     initscr();
