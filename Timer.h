@@ -6,6 +6,7 @@
 #define ELABORATOTIMER_TIMER_H
 
 #include <chrono>
+#include <exception>
 
 using namespace std;
 using namespace std::chrono;
@@ -16,22 +17,19 @@ public:
 
     const time_point<steady_clock> &getStart() const;
 
-    void setStart(const time_point<steady_clock> &start);
-
     int getDuration() const;
 
-    void setDuration(const int duration);
+    bool setDuration(const unsigned int seconds);
 
     bool isRunning() const;
 
-    void setRunning(bool running);
-
-    void startTimer();
-    void stopTimer();
+    bool startTimer();
+    bool stopTimer();
+    void resetTimer();
 
 private:
     time_point<steady_clock> start;
-    ::duration<int> duration;
+    ::duration<int, milli> duration;
     bool running;
 };
 

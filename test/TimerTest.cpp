@@ -9,6 +9,5 @@
 TEST(TimerTest, DefaultConstructor) {
     Timer t;
     ASSERT_FALSE(t.isRunning());
-    ASSERT_EQ(0, t.getDuration());
+    ASSERT_EQ(t.getDuration(), 0);
 }
-

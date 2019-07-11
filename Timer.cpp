@@ -4,6 +4,8 @@
 
 #include "Timer.h"
 #include <chrono>
+#include <math.h>
+#include <functional>
 
 using namespace std;
 using namespace std::chrono;
@@ -18,37 +20,56 @@ const time_point<steady_clock> &Timer::getStart() const {
     return start;
 }
 
-void Timer::setStart(const time_point<steady_clock> &start) {
-    Timer::start = start;
-}
-
 int Timer::getDuration() const {
-    return duration.count();
+    if(!running) {
+        return (int)round(duration.count()/1000);
+    }
+    else{
+        time_point<steady_clock> now = steady_clock::now();
+        return (int)round((duration.count() - duration_cast<milliseconds>(now - start).count())/1000);
+    }
 }
 
-void Timer::setDuration(const int duration) {
-    Timer::duration = ::duration<int>(duration);
+bool Timer::setDuration(const unsigned int seconds) {
+    if(!running) {
+        if (seconds > 0) {
+            duration = ::duration < int, milli > (seconds * 1000);
+            return true;
+        }
+        return false;
+    }
+    throw bad_function_call();
 }
 
 bool Timer::isRunning() const {
     return running;
 }
 
-void Timer::setRunning(bool running) {
-    Timer::running = running;
-}
-
-void Timer::startTimer() {
-    if(!running){
-        start = steady_clock::now();
-        running = true;
+bool Timer::startTimer(){
+    if(duration != ::duration<int>::zero()) {
+        if (!running) {
+            start = steady_clock::now();
+            running = true;
+            return true;
+        }
+        return false;
     }
+    throw bad_function_call();
 }
 
-void Timer::stopTimer() {
+bool Timer::stopTimer() {
     if(running){
         time_point<steady_clock> now = steady_clock::now();
         running = false;
-        duration = duration_cast<seconds>(now - start);
+        if(duration_cast<milliseconds>(now - start) < duration) {
+            duration = duration - duration_cast<milliseconds>(now - start);
+            return true;
+        }
+        return false;
     }
+    return false;
+}
+
+void Timer::resetTimer() {
+    start = steady_clock::now();
 }
