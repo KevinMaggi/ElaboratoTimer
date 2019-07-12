@@ -8,26 +8,42 @@
 
 using namespace std;
 
+void printDigit(char c, int x, int y, int size);
+
 int main() {
     initscr();
 
     Timer t;
-    t.setDuration(15);
+    t.setDuration(10);
 
-    string remaining = to_string(t.getDuration());
-    printw(&remaining[0]);
-
+    int r;
+    time_point<steady_clock> start = steady_clock::now();
     t.startTimer();
 
-    while(t.getDuration()){
-        string remaining = to_string(t.getDuration());
+
+    while((r = t.getDuration()) >= 0){
+        string remaining = to_string(r);
 
         clear();
+
+        move(2,10);
+        printw("TIMER");
+        move(4, 15);
         printw(&remaining[0]);
+        move(10, 0);
         refresh();
+
+        napms(25);
     }
 
+    time_point<steady_clock> end = steady_clock::now();
+    string tempo = to_string(duration_cast<milliseconds>(end-start).count());
+
+    move(2,10);
+    printw("TIMER");
+    move(4, 15);
     printw("FINE");
+    printw(&tempo[0]);
     refresh();
 
     getch();

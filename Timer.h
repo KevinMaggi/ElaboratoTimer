@@ -7,6 +7,7 @@
 
 #include <chrono>
 #include <exception>
+#include <string>
 
 using namespace std;
 using namespace std::chrono;
@@ -17,9 +18,9 @@ public:
 
     const time_point<steady_clock> &getStart() const;
 
-    int getDuration() const;
-
     bool setDuration(const unsigned int seconds);
+    int getDuration();
+    string getDurationString() const;
 
     bool isRunning() const;
 
