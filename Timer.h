@@ -19,8 +19,8 @@ public:
     const time_point<steady_clock> &getStart() const;
 
     bool setDuration(const unsigned int seconds);
-    int getDuration();
-    string getDurationString() const;
+    int getDuration() const;
+    string getDurationString(int mode) const;
 
     bool isRunning() const;
 
@@ -32,7 +32,8 @@ private:
     time_point<steady_clock> start;
     ::duration<int, milli> duration;
     bool running;
-};
 
+    static const int secPerDay, secPerHour, secPerMin;
+};
 
 #endif //ELABORATOTIMER_TIMER_H

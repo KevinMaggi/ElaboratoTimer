@@ -21,8 +21,8 @@ int main() {
     t.startTimer();
 
 
-    while((r = t.getDuration()) >= 0){
-        string remaining = to_string(r);
+    while((r = t.getDuration()) > 0){
+        string remaining = t.getDurationString(3);
 
         clear();
 

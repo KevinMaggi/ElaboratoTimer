@@ -11,6 +11,10 @@
 using namespace std;
 using namespace std::chrono;
 
+const int Timer::secPerDay = 60*60*24;
+const int Timer::secPerHour = 60*60;
+const int Timer::secPerMin = 60;
+
 Timer::Timer() {
     start = steady_clock::now();
     duration = ::duration<int>::zero();
@@ -21,7 +25,7 @@ const time_point<steady_clock> &Timer::getStart() const {
     return start;
 }
 
-int Timer::getDuration() {
+int Timer::getDuration() const {
     if(!running) {
         return (int)round(duration.count()/1000);
     }
@@ -35,7 +39,7 @@ int Timer::getDuration() {
 
 bool Timer::setDuration(const unsigned int seconds) {
     if(!running) {
-        if (seconds > 0) {
+        if (seconds > 0 && seconds <= secPerDay) {
             duration = ::duration < int, milli > (seconds * 1000);
             return true;
         }
@@ -78,6 +82,36 @@ void Timer::resetTimer() {
     start = steady_clock::now();
 }
 
-string Timer::getDurationString() const {
-    return std::__cxx11::string();
+string Timer::getDurationString(int mode) const {
+    int hours, minutes, seconds = getDuration();
+    string s, temp;
+    switch(mode){
+        case 1:
+            hours = seconds / secPerHour;
+            minutes = (seconds - hours*secPerHour) / secPerMin;
+            seconds = seconds - hours*secPerHour - minutes*secPerMin;
+
+            if (hours){
+                s = s + to_string(hours) + " h, ";
+            }
+            if (hours || minutes) {
+                s = s + to_string(minutes) + " m, ";
+            }
+            s = s + to_string(seconds) + " s";
+            break;
+        case 2:
+            hours = seconds / secPerHour;
+            minutes = (seconds - hours*secPerHour) / secPerMin;
+            seconds = seconds - hours*secPerHour - minutes*secPerMin;
+
+            s = to_string(hours);
+            s += ":";
+            s += ((temp = to_string(minutes)).length() == 2) ? temp : "0"+temp;
+            s += ":";
+            s += ((temp = to_string(seconds)).length() == 2) ? temp : "0"+temp;
+            break;
+        default:
+            s = to_string(seconds) + " s";
+    }
+    return s;
 }
