@@ -18,7 +18,7 @@ public:
 
     const time_point<steady_clock> &getStart() const;
 
-    bool setDuration(const unsigned int seconds);
+    bool setDuration(unsigned int seconds);
     int getDuration() const;
     string getDurationString(int mode) const;
 

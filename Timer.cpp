@@ -85,12 +85,13 @@ void Timer::resetTimer() {
 string Timer::getDurationString(int mode) const {
     int hours, minutes, seconds = getDuration();
     string s, temp;
+
+    hours = seconds / secPerHour;
+    minutes = (seconds - hours*secPerHour) / secPerMin;
+    seconds = seconds - hours*secPerHour - minutes*secPerMin;
+
     switch(mode){
         case 1:
-            hours = seconds / secPerHour;
-            minutes = (seconds - hours*secPerHour) / secPerMin;
-            seconds = seconds - hours*secPerHour - minutes*secPerMin;
-
             if (hours){
                 s = s + to_string(hours) + " h, ";
             }
@@ -100,10 +101,6 @@ string Timer::getDurationString(int mode) const {
             s = s + to_string(seconds) + " s";
             break;
         case 2:
-            hours = seconds / secPerHour;
-            minutes = (seconds - hours*secPerHour) / secPerMin;
-            seconds = seconds - hours*secPerHour - minutes*secPerMin;
-
             s = to_string(hours);
             s += ":";
             s += ((temp = to_string(minutes)).length() == 2) ? temp : "0"+temp;
