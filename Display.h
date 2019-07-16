@@ -21,6 +21,8 @@ public:
 
     void checkKB();
 
+    void printFooter();
+
 private:
     Timer timer;
     Clock clock;
@@ -29,8 +31,10 @@ private:
     WINDOW * timerWin = nullptr;
     WINDOW * clockWin = nullptr;
     WINDOW * chronoWin = nullptr;
+    WINDOW * instruction = nullptr;
     int height = 0, width = 0, termWidth = 0, termHeight = 0;
     string tmrTime, chrTime, chrMem, time, date;
+    bool help;
 
     bool terminate;
 };

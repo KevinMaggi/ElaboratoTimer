@@ -11,6 +11,7 @@ Display::Display() {
     clock = Clock();
     chrono = Chronometer();
     terminate = false;
+    help = false;
 }
 
 void Display::init() {
@@ -19,16 +20,17 @@ void Display::init() {
     keypad(stdscr, true);
     nodelay(stdscr, true);
 
-    timer.setDuration(10);
+    timer.setDuration(60);
 
     termWidth = getmaxx(stdscr);
     termHeight = getmaxy(stdscr);
     height = 9;
     width = 25;
 
-    timerWin = newwin(height, width, (termHeight-height)/2, (termWidth - width*3 + 2)/2);
-    clockWin = newwin(height, width, (termHeight-height)/2, (termWidth - width*3 + 2)/2 + width - 1);
-    chronoWin = newwin(height, width, (termHeight-height)/2, (termWidth - width*3 +2)/2 + 2*width - 2);
+    timerWin = newwin(height, width, (termHeight-height*2 - 2)/2, (termWidth - width*3 + 2)/2);
+    clockWin = newwin(height, width, (termHeight-height*2 - 2)/2, (termWidth - width*3 + 2)/2 + width - 1);
+    chronoWin = newwin(height, width, (termHeight-height*2 - 2)/2, (termWidth - width*3 +2)/2 + 2*width - 2);
+    instruction = newwin(height, width*3-2, (termHeight-height*2 - 2)/2 + height + 2, (termWidth - width*3 + 2)/2);
     refresh();
 
     do{
@@ -41,7 +43,9 @@ void Display::init() {
 void Display::update() {
     checkKB();
     erase();
+
     werase(timerWin);
+    werase(clockWin);
     werase(chronoWin);
 
     wborder(timerWin, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -58,18 +62,27 @@ void Display::update() {
     else {
         tmrTime = timer.getDurationString();
     }
+    date = clock.getDate();
+    time = clock.getTime();
     chrTime = chrono.getTimeString();
     chrMem = chrono.getMemoryString();
 
-
-
     mvwprintw(timerWin, 5, (width-tmrTime.length())/2, &tmrTime[0]);
+    mvwprintw(clockWin, 4, (width-date.length())/2, &date[0]);
+    mvwprintw(clockWin, 6, (width-time.length())/2, &time[0]);
     mvwprintw(chronoWin, 4, (width-chrTime.length())/2, &chrTime[0]);
     mvwprintw(chronoWin, 6, (width-chrMem.length())/2, &chrMem[0]);
+    if(help){
+        printFooter();
+    }
+    else{
+        mvwprintw(instruction, 0, 1, "Press F1 for help");
+    }
 
     wrefresh(timerWin);
     wrefresh(chronoWin);
     wrefresh(clockWin);
+    wrefresh(instruction);
 
     napms(50);
 }
@@ -118,7 +131,28 @@ void Display::checkKB() {
         case 'n':
             chrono.setViewMode(chrono.getViewMode()+1);
             break;
+        case 'k':
+            clock.setViewMode(clock.getViewMode()+1);
+            break;
+        case KEY_F(1):
+            if (!help){
+                help = true;
+                printFooter();
+            }
+            else{
+                help = false;
+            }
+            break;
         default:
             break;
     }
+}
+
+void Display::printFooter() {
+    mvwprintw(instruction, 0, 1, "TIMER | S : start, T : stop, R : reset, W : view, UP : +1s, DOWN : -1s");
+    mvwprintw(instruction, 1, 1, "CLOCK | K : change view");
+    mvwprintw(instruction, 2, 1, "CHRONO | V : start, SPACE: stop, B : reset, N : change view");
+    mvwprintw(instruction, 4, 1, "ESC : exit");
+    mvwprintw(instruction, 6, 53, "Credit: Kevin Maggi");
+    wrefresh(instruction);
 }

@@ -20,7 +20,7 @@ Chronometer::Chronometer() {
     stored = ::duration<int>::zero();
     running = false;
     memory = ::duration<int>::zero();
-    viewMode = 0;
+    viewMode = 2;
 }
 
 const time_point<steady_clock> &Chronometer::getStart() const {

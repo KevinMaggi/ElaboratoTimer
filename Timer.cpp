@@ -20,7 +20,7 @@ Timer::Timer() {
     start = steady_clock::now();
     duration = ::duration<int>::zero();
     running = false;
-    viewMode = 0;
+    viewMode = 2;
 }
 
 const time_point<steady_clock> &Timer::getStart() const {
