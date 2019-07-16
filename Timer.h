@@ -19,10 +19,13 @@ public:
     const time_point<steady_clock> &getStart() const;
 
     bool setDuration(unsigned int seconds);
-    int getDuration() const;
-    string getDurationString(int mode) const;
+    int getDuration();
+    string getDurationString();
 
     bool isRunning() const;
+
+    int getViewMode() const;
+    void setViewMode(int vm);
 
     bool startTimer();
     bool stopTimer();
@@ -32,6 +35,7 @@ private:
     time_point<steady_clock> start;
     ::duration<int, milli> duration;
     bool running;
+    int viewMode;
 
     static const int secPerDay, secPerHour, secPerMin;
 };

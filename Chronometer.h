@@ -17,12 +17,15 @@ public:
 
     const time_point<steady_clock> &getStart() const;
 
-    string getTimeString(int mode) const;
+    string getTimeString() const;
     int getTime() const;
 
-    string getMemoryString(int mode) const;
+    string getMemoryString() const;
 
     bool isRunning() const;
+
+    int getViewMode() const;
+    void setViewMode(int vm);
 
     bool startChrono();
     bool stopChrono();
@@ -33,10 +36,11 @@ private:
     ::duration<int, milli> stored;
     bool running;
     ::duration<int, milli> memory;
+    int viewMode;
 
     static const int secPerDay, secPerHour, secPerMin;
 
-    string stringify(int deciseconds, int mode) const;
+    string stringify(int deciseconds) const;
 };
 
 

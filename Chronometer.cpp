@@ -20,14 +20,15 @@ Chronometer::Chronometer() {
     stored = ::duration<int>::zero();
     running = false;
     memory = ::duration<int>::zero();
+    viewMode = 0;
 }
 
 const time_point<steady_clock> &Chronometer::getStart() const {
     return start;
 }
 
-string Chronometer::getTimeString(int mode) const {
-    return stringify(getTime(), mode);
+string Chronometer::getTimeString() const {
+    return stringify(getTime());
 }
 
 int Chronometer::getTime() const{
@@ -41,13 +42,13 @@ int Chronometer::getTime() const{
     return decisecs;
 }
 
-string Chronometer::getMemoryString(int mode) const {
+string Chronometer::getMemoryString() const {
     if(memory != duration<int>::zero()) {
         int decisecs = (int) round(memory.count() / 100.f);
-        return stringify(decisecs, mode);
+        return stringify(decisecs);
     }
     else{
-        return "";
+        return "---";
     }
 }
 
@@ -86,16 +87,16 @@ void Chronometer::resetChrono() {
     }
 }
 
-string Chronometer::stringify(int deciseconds, int mode) const {
-    int hours, minutes, seconds;
+string Chronometer::stringify(int deciseconds) const {
+    int hours, minutes, seconds, decisecs;
     string s, temp;
 
     hours = deciseconds / (secPerHour*10);
     minutes = (deciseconds - hours*secPerHour*10) / (secPerMin*10);
     seconds = (deciseconds - hours*secPerHour*10 - minutes*secPerMin*10) / 10;
-    deciseconds = deciseconds - hours*secPerHour*10 - minutes*secPerMin*10 - seconds*10;
+    decisecs = deciseconds%10;
 
-    switch(mode){
+    switch(viewMode){
         case 1:
             if (hours){
                 s = s + to_string(hours) + " h, ";
@@ -103,7 +104,7 @@ string Chronometer::stringify(int deciseconds, int mode) const {
             if (hours || minutes) {
                 s = s + to_string(minutes) + " m, ";
             }
-            s = s + to_string(seconds) + "." + to_string(deciseconds) + " s";
+            s = s + to_string(seconds) + "." + to_string(decisecs) + " s";
             break;
         case 2:
             s = to_string(hours);
@@ -111,10 +112,21 @@ string Chronometer::stringify(int deciseconds, int mode) const {
             s += ((temp = to_string(minutes)).length() == 2) ? temp : "0"+temp;
             s += ":";
             s += ((temp = to_string(seconds)).length() == 2) ? temp : "0"+temp;
-            s += "." + to_string(deciseconds);
+            s += "." + to_string(decisecs);
             break;
         default:
-            s = to_string(seconds) + "." + to_string(deciseconds) + " s";
+            s = to_string(deciseconds/10) + "." + to_string(deciseconds%10) + " s";
+    }
+    if (s.length()%2 == 0){
+        s.replace(s.find(" s"), 2, "  s");
     }
     return s;
+}
+
+int Chronometer::getViewMode() const {
+    return viewMode;
+}
+
+void Chronometer::setViewMode(int vm) {
+    viewMode = vm%3;
 }

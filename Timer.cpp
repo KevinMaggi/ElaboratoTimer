@@ -7,6 +7,7 @@
 #include <math.h>
 #include <functional>
 #include <string>
+#include <ncurses.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -19,13 +20,14 @@ Timer::Timer() {
     start = steady_clock::now();
     duration = ::duration<int>::zero();
     running = false;
+    viewMode = 0;
 }
 
 const time_point<steady_clock> &Timer::getStart() const {
     return start;
 }
 
-int Timer::getDuration() const {
+int Timer::getDuration() {
     if(!running) {
         return (int)round(duration.count()/1000);
     }
@@ -33,6 +35,9 @@ int Timer::getDuration() const {
         time_point<steady_clock> now = steady_clock::now();
         float r = (duration - duration_cast<milliseconds>(now-start)).count()/1000.f;
         int remaining = r >= 0 ? (int)ceil(r) : (int)floor(r);
+        if (remaining <= 0){
+            remaining = 0;
+        }
         return remaining;
     }
 }
@@ -82,7 +87,7 @@ void Timer::resetTimer() {
     start = steady_clock::now();
 }
 
-string Timer::getDurationString(int mode) const {
+string Timer::getDurationString() {
     int hours, minutes, seconds = getDuration();
     string s, temp;
 
@@ -90,7 +95,7 @@ string Timer::getDurationString(int mode) const {
     minutes = (seconds - hours*secPerHour) / secPerMin;
     seconds = seconds - hours*secPerHour - minutes*secPerMin;
 
-    switch(mode){
+    switch(viewMode){
         case 1:
             if (hours){
                 s = s + to_string(hours) + " h, ";
@@ -108,7 +113,18 @@ string Timer::getDurationString(int mode) const {
             s += ((temp = to_string(seconds)).length() == 2) ? temp : "0"+temp;
             break;
         default:
-            s = to_string(seconds) + " s";
+            s = to_string(getDuration()) + " s";
+    }
+    if (s.length()%2 == 0){
+        s.replace(s.find(" s"), 2, "  s");
     }
     return s;
+}
+
+int Timer::getViewMode() const {
+    return viewMode;
+}
+
+void Timer::setViewMode(int vm) {
+    viewMode = vm%3;
 }

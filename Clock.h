@@ -6,7 +6,17 @@
 #define ELABORATOTIMER_CLOCK_H
 
 
+#include <iostream>
+
+using namespace std;
+
 class Clock {
+public:
+    Clock();
+
+    void display() const;
+
+private:
 
 };
 

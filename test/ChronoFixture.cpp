@@ -22,7 +22,7 @@ TEST_F(ChronoSuite, StartChrono){
     ASSERT_FALSE(c.startChrono());
     ASSERT_GT(c.getStart(), start);
     ASSERT_LT(c.getStart(), steady_clock::now());
-    ASSERT_EQ(c.getMemoryString(0), "");
+    ASSERT_EQ(c.getMemoryString(), "---");
 
     std::this_thread::sleep_for(1s);
 
@@ -37,7 +37,7 @@ TEST_F(ChronoSuite, StopChrono){
     ASSERT_FALSE(c.stopChrono());
     ASSERT_FALSE(c.isRunning());
     ASSERT_NE(c.getTime(), 0);
-    ASSERT_EQ(c.getMemoryString(0), "");
+    ASSERT_EQ(c.getMemoryString(), "---");
 }
 
 TEST_F(ChronoSuite, ResetRunningChrono){
@@ -46,7 +46,7 @@ TEST_F(ChronoSuite, ResetRunningChrono){
     time_point<steady_clock> reset = steady_clock::now();
     c.resetChrono();
 
-    ASSERT_NE(c.getMemoryString(0), "0.0 s");
+    ASSERT_NE(c.getMemoryString(), "0.0 s");
     ASSERT_GT(c.getStart(), reset);
     ASSERT_TRUE(c.isRunning());
 }
@@ -60,7 +60,7 @@ TEST_F(ChronoSuite, ResetNonRunningChrono){
     c.resetChrono();
 
     ASSERT_EQ(c.getTime(), 0);
-    ASSERT_EQ(c.getMemoryString(0), "");
+    ASSERT_EQ(c.getMemoryString(), "---");
     ASSERT_FALSE(c.isRunning());
 }
 
