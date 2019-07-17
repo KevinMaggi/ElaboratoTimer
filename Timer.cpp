@@ -33,9 +33,9 @@ int Timer::getDuration() {
     }
     else{
         time_point<steady_clock> now = steady_clock::now();
-        float r = (duration - duration_cast<milliseconds>(now-start)).count()/1000.f;
+        float r = ((duration - duration_cast<milliseconds>(now-start)).count()/1000.f);
         int remaining = r >= 0 ? (int)ceil(r) : (int)floor(r);
-        if (remaining <= 0){
+        if (remaining < 0){
             remaining = 0;
         }
         return remaining;
@@ -73,7 +73,7 @@ bool Timer::stopTimer() {
     if(running){
         time_point<steady_clock> now = steady_clock::now();
         running = false;
-        ::duration<int, milli> remaining = duration - duration_cast<milliseconds>(now - start);
+        ::duration<int, milli> remaining = duration - duration_cast<seconds>(now - start);
         if(remaining.count() > 0) {
             duration = remaining;
             return true;

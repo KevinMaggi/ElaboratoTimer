@@ -81,10 +81,10 @@ TEST_F(TimerSuite, ResetNonRunningTimer){
 }
 
 TEST_F(TimerSuite, StringDuration){
+    t.setViewMode(1);
     t.setDuration(1);
     ASSERT_EQ(t.getDurationString(), "1 s");
     t.setDuration(60+1);
-    t.setViewMode(1);
     ASSERT_EQ(t.getDurationString(), "1 m, 1  s");
     t.setDuration(60*60+1);
     ASSERT_EQ(t.getDurationString(), "1 h, 0 m, 1 s");

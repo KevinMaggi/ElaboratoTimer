@@ -20,7 +20,7 @@ void Display::init() {
     keypad(stdscr, true);
     nodelay(stdscr, true);
 
-    timer.setDuration(60);
+    timer.setDuration(5);
 
     termWidth = getmaxx(stdscr);
     termHeight = getmaxy(stdscr);
@@ -102,6 +102,36 @@ void Display::checkKB() {
         case KEY_DOWN:
             if(!timer.isRunning()) {
                 timer.setDuration(timer.getDuration() - 1);
+            }
+            break;
+        case '1':
+            if(!timer.isRunning()) {
+                timer.setDuration(timer.getDuration() + 10);
+            }
+            break;
+        case '2':
+            if(!timer.isRunning()) {
+                timer.setDuration(timer.getDuration() - 10);
+            }
+            break;
+        case '6':
+            if(!timer.isRunning()) {
+                timer.setDuration(timer.getDuration() + 60 );
+            }
+            break;
+        case '7':
+            if(!timer.isRunning()) {
+                timer.setDuration(timer.getDuration() - 60);
+            }
+            break;
+        case '9':
+            if(!timer.isRunning()) {
+                timer.setDuration(timer.getDuration() + 3600);
+            }
+            break;
+        case '0':
+            if(!timer.isRunning()) {
+                timer.setDuration(timer.getDuration() - 3600);
             }
             break;
         case 's':
